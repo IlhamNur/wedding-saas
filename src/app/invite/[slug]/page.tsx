@@ -1,6 +1,8 @@
 import { supabaseServer } from "@/lib/supabaseServer";
 import { notFound } from "next/navigation";
 import Countdown from "@/components/Countdown";
+import RSVPForm from "@/components/RSVPForm";
+import GuestbookForm from "@/components/GuestbookForm";
 
 export default async function InvitationPublicPage({
   params,
@@ -35,6 +37,9 @@ export default async function InvitationPublicPage({
         <p className="font-semibold">Tanggal Acara:</p>
         <p>{new Date(invitation.event_date).toLocaleDateString("id-ID")}</p>
       </div>
+
+      <RSVPForm invitationId={invitation.id} />
+      <GuestbookForm invitationId={invitation.id} />
 
       {/* Countdown timer */}
       <Countdown targetDate={invitation.event_date} />
