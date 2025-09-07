@@ -1,5 +1,6 @@
 import { supabaseServer } from "@/lib/supabaseServer";
 import { notFound } from "next/navigation";
+import { themes } from "@/lib/themes";
 import Countdown from "@/components/Countdown";
 import RSVPForm from "@/components/RSVPForm";
 import GuestbookForm from "@/components/GuestbookForm";
@@ -19,8 +20,10 @@ export default async function InvitationPublicPage({
 
   if (!invitation) return notFound();
 
+  const theme = themes[invitation.theme] || themes.classic;
+
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center p-6">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center p-6 ${theme.bg} ${theme.text}">
       {invitation.cover_image_url && (
         <img
           src={invitation.cover_image_url}
@@ -28,7 +31,7 @@ export default async function InvitationPublicPage({
           className="w-full max-w-2xl rounded-lg shadow mb-6"
         />
       )}
-      <h1 className="text-3xl font-bold text-center mb-2">
+      <h1 className="text-3xl font-bold text-center mb-2 ${theme.accent}">
         {invitation.bride_name} & {invitation.groom_name}
       </h1>
       <p className="text-gray-600 text-center mb-4">{invitation.title}</p>
@@ -37,9 +40,6 @@ export default async function InvitationPublicPage({
         <p className="font-semibold">Tanggal Acara:</p>
         <p>{new Date(invitation.event_date).toLocaleDateString("id-ID")}</p>
       </div>
-
-      <RSVPForm invitationId={invitation.id} />
-      <GuestbookForm invitationId={invitation.id} />
 
       {/* Countdown timer */}
       <Countdown targetDate={invitation.event_date} />
@@ -52,6 +52,10 @@ export default async function InvitationPublicPage({
           loading="lazy"
         ></iframe>
       )}
+
+      {/* RSVP & Guestbook */}
+      <RSVPForm invitationId={invitation.id} />
+      <GuestbookForm invitationId={invitation.id} />
     </div>
   );
 }
